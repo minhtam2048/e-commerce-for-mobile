@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class UserProductItemWidget extends StatelessWidget {
+  final String id;
   final String title;
   final String imageUrl;
 
-  UserProductItemWidget(this.title, this.imageUrl);
+  UserProductItemWidget(this.id, this.title, this.imageUrl);
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +15,7 @@ class UserProductItemWidget extends StatelessWidget {
         backgroundImage: NetworkImage(imageUrl),
       ),
       trailing: Container(
+        width: 100,
         child: Row(
           children: <Widget>[
             IconButton(
@@ -28,7 +30,6 @@ class UserProductItemWidget extends StatelessWidget {
             ),
           ],
         ),
-        width: 100,
       ),
     );
   }
