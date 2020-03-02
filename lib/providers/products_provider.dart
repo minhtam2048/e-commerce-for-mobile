@@ -48,10 +48,10 @@ class ProductsProvider with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  void addProduct(Product prod) {
+  Future<void> addProduct(Product prod) async {
     // _items.add(value);
     const url = 'https://amajon-flutter.firebaseio.com/products.json';
-    http.post(
+    return http.post(
       url,
       body: json.encode(
         {
