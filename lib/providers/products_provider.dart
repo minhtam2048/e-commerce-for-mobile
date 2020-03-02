@@ -51,18 +51,17 @@ class ProductsProvider with ChangeNotifier {
   Future<void> addProduct(Product prod) async {
     // _items.add(value);
     const url = 'https://amajon-flutter.firebaseio.com/products.json';
-    return http.post(
-      url,
-      body: json.encode(
-        {
+    try {
+      final res = await http.post(
+        url,
+        body: json.encode({
           'title': prod.title,
           'description': prod.description,
           'imageUrl': prod.imageUrl,
           'price': prod.price,
           'isFavorite': prod.isFavorite,
-        },
-      ),
-    ).then((res) {
+        }),
+      );
       final newProduct = Product(
         id: json.decode(res.body)['name'],
         title: prod.title,
@@ -72,10 +71,10 @@ class ProductsProvider with ChangeNotifier {
       );
       _items.add(newProduct);
       notifyListeners();
-    }).catchError((error) {
+    } catch (error) {
       print(error);
-      throw error;
-    });
+      throw (error);
+    }
   }
 
   void updateProduct(String id, Product selectedProduct) {
