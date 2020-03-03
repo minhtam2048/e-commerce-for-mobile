@@ -40,6 +40,8 @@ class ProductsProvider with ChangeNotifier {
     // ),
   ];
 
+  Product lastProduct;
+
   List<Product> get items {
     return [..._items];
   }

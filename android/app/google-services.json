@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "811785134606",
+    "firebase_url": "https://amajon-flutter.firebaseio.com",
+    "project_id": "amajon-flutter",
+    "storage_bucket": "amajon-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811785134606:android:6c8029c96d23083f54125f",
+        "android_client_info": {
+          "package_name": "com.example.shop_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "811785134606-mns7a1oa00tk2nsgjj92d6aisi9e3o1d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqsTCAxbd9pxeAkFCgR08vvoALMP-BiYw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "811785134606-mns7a1oa00tk2nsgjj92d6aisi9e3o1d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
