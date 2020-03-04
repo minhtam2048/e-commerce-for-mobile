@@ -11,16 +11,25 @@ class UserProductItemWidget extends StatelessWidget {
   UserProductItemWidget(this.id, this.title, this.imageUrl);
 
   void _showDialog(BuildContext context) {
+    final scaffold = Scaffold.of(context);
     Widget noBtn = FlatButton(
         onPressed: () {
           Navigator.of(context).pop();
         },
         child: Text('No'));
     Widget yesBtn = FlatButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-          Provider.of<ProductsProvider>(context, listen: false)
-              .deleteProduct(id);
+        onPressed: () async {
+          try {
+            Navigator.of(context).pop();
+            await Provider.of<ProductsProvider>(context, listen: false)
+                .deleteProduct(id);
+          } catch (error) {
+            scaffold.showSnackBar(SnackBar(
+                content: Text(
+              'Deleting failed :(',
+              textAlign: TextAlign.center,
+            )));
+          }
         },
         child: Text('Yes'));
     AlertDialog alert = AlertDialog(
