@@ -89,7 +89,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       drawer: AppDrawerWidget(),
-      body: _isLoading ?  Center(child: CircularProgressIndicator(),) : ProductsGrid(),
+      body: _isLoading ?  Center(child: CircularProgressIndicator(),) : ProductsGrid(_showOnlyFavorites),
     );
   }
 }
