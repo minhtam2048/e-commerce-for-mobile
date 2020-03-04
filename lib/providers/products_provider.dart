@@ -67,11 +67,11 @@ class ProductsProvider with ChangeNotifier {
           imageUrl: productData['imageUrl'],
         ));
       });
-      _items = loadedProducts;  
+      _items = loadedProducts;
       notifyListeners();
     } catch (error) {
-      throw(error);
-    } 
+      throw (error);
+    }
   }
 
   Future<void> addProduct(Product prod) async {
@@ -103,11 +103,23 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-  void updateProduct(String id, Product selectedProduct) {
+  Future<void> updateProduct(String id, Product selectedProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      _items[prodIndex] = selectedProduct;
-      notifyListeners();
+      try {
+        final url = 'https://amajon-flutter.firebaseio.com/products/$id.json';
+        await http.patch(url,
+            body: json.encode({
+              'title': selectedProduct.title,
+              'description': selectedProduct.description,
+              'price': selectedProduct.price,
+              'imageUrl': selectedProduct.imageUrl,
+            }));
+        _items[prodIndex] = selectedProduct;
+        notifyListeners();
+      } catch (error) {
+        throw (error);
+      }
     } else {
       print('....');
     }
