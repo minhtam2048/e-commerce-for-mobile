@@ -96,8 +96,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
       Navigator.of(context).pop();
     } else {
       try {
-        await Provider.of<ProductsProvider>(context, listen: false)
-            .addProduct(_editedProduct);
+        // await Provider.of<ProductsProvider>(context, listen: false)
+        //     .addProduct(_editedProduct);
+        await Provider.of<ProductsProvider>(context, listen: false).addProductFirestore(_editedProduct);
       } catch (error) {
         await showDialog(
           context: context,

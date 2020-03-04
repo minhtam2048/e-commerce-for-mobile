@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_app/common/http-exception.dart';
 import '../models/product.dart';
@@ -42,6 +43,7 @@ class ProductsProvider with ChangeNotifier {
   ];
 
   Product lastProduct;
+  final databaseReference = Firestore.instance;
 
   List<Product> get items {
     return [..._items];
@@ -75,6 +77,11 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
+  Future<void> fecthProductsFirestore() async {
+    var itemCount = 5;
+    for (int i = 0; i < itemCount; i++) {}
+  }
+
   Future<void> addProduct(Product prod) async {
     // _items.add(value);
     const url = 'https://amajon-flutter.firebaseio.com/products.json';
@@ -101,6 +108,30 @@ class ProductsProvider with ChangeNotifier {
     } catch (error) {
       print(error);
       throw (error);
+    }
+  }
+
+  Future<void> addProductFirestore(Product prod) async {
+    try {
+      await databaseReference.collection('products').add({
+        'title': prod.title,
+        'description': prod.description,
+        'imageUrl': prod.imageUrl,
+        'price': prod.price,
+        'isFavorite': prod.isFavorite,
+      });
+      final newProduct = Product(
+        id: prod.id,
+        title: prod.title,
+        description: prod.description,
+        price: prod.price,
+        imageUrl: prod.imageUrl,
+      );
+      _items.add(newProduct);
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      throw error;
     }
   }
 
