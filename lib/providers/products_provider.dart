@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -48,9 +49,11 @@ class ProductsProvider with ChangeNotifier {
   List<Product> get items {
     return [..._items];
   }
+
   List<Product> get favoriteItems {
     return [..._items.where((prod) => prod.isFavorite).toList()];
   }
+
   Product findById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
   }
@@ -80,8 +83,30 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> fecthProductsFirestore() async {
-    var itemCount = 5;
-    for (int i = 0; i < itemCount; i++) {}
+    try {
+      final List<Product> loadedProducts = [];
+      await databaseReference
+          .collection("products")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) async {
+        snapshot.documents.forEach((prod) {
+          ;
+          loadedProducts.add(Product(
+            id: prod.documentID,
+            title: prod.data['title'],
+            imageUrl: prod.data['imageUrl'],
+            description: prod.data['description'],
+            isFavorite: prod.data['isFavorite'],
+            price: prod.data['price'] as dynamic,
+          ));
+        });
+        
+      });
+      _items = loadedProducts;
+      notifyListeners();
+    } catch (error) {
+      print(error);
+    }
   }
 
   Future<void> addProduct(Product prod) async {
