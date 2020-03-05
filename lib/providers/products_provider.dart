@@ -90,14 +90,13 @@ class ProductsProvider with ChangeNotifier {
           .getDocuments()
           .then((QuerySnapshot snapshot) async {
         snapshot.documents.forEach((prod) {
-          ;
           loadedProducts.add(Product(
             id: prod.documentID,
             title: prod.data['title'],
             imageUrl: prod.data['imageUrl'],
             description: prod.data['description'],
             isFavorite: prod.data['isFavorite'],
-            price: prod.data['price'] as dynamic,
+            price: prod.data['price'] as num,
           ));
         });
         
