@@ -20,21 +20,28 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
+  void _setFavValue(bool newValue) {
+    isFavorite = newValue;
+    notifyListeners();
+  }
+
   Future<void> toggleFavoriteStatus() async {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
     final url = 'https://amajon-flutter.firebaseio.com/products/$id.json';
     try {
-      http.patch(
+      final res = await http.patch(
         url,
         body: json.encode({
           'isFavorite': isFavorite,
         }),
       );
+      if (res.statusCode >= 400) {
+        _setFavValue(oldStatus);
+      }
     } catch (error) {
-      isFavorite = oldStatus;
-      notifyListeners();
+      _setFavValue(oldStatus);
     }
   }
 }
