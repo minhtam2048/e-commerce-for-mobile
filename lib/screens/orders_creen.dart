@@ -30,7 +30,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     _isInit = false;
     super.didChangeDependencies();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final orderData = Provider.of<OrdersProviders>(context);
@@ -40,9 +40,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
         title: Text('your orders'),
       ),
       drawer: AppDrawerWidget(),
-      body: ListView.builder(
-          itemBuilder: (ctx, i) => OrderItemWidget(orderData.orders[i]),
-          itemCount: orderData.orders.length),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemBuilder: (ctx, i) => OrderItemWidget(orderData.orders[i]),
+              itemCount: orderData.orders.length),
     );
   }
 }
