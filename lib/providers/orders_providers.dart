@@ -32,6 +32,9 @@ class OrdersProviders with ChangeNotifier {
       final List<OrderItem> loadedOrders = [];
       // print(json.decode(res.body));
       final extractedData = json.decode(res.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return;
+      }
       extractedData.forEach((orderId, orderData) {
         loadedOrders.add(OrderItem(
           id: orderId,
@@ -45,7 +48,7 @@ class OrdersProviders with ChangeNotifier {
                   title: prod['title']))
               .toList(),
         ));
-        _orders = loadedOrders;
+        _orders = loadedOrders.reversed.toList();
         notifyListeners();
       });
     } catch (error) {
