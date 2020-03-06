@@ -62,7 +62,7 @@ class ProductsProvider with ChangeNotifier {
     const url = 'https://amajon-flutter.firebaseio.com/products.json';
     try {
       final res = await http.get(url);
-      print(json.decode(res.body));
+      // print(json.decode(res.body));
       final extractedData = json.decode(res.body) as Map<String, dynamic>;
       final List<Product> loadedProducts = [];
       extractedData.forEach((productId, productData) {

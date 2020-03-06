@@ -6,11 +6,12 @@ class CartItem {
   final int quantity;
   final double price;
 
-  CartItem(
-      {@required this.id,
-      @required this.title,
-      @required this.quantity,
-      @required this.price});
+  CartItem({
+    @required this.id,
+    @required this.title,
+    @required this.quantity,
+    @required this.price,
+  });
 }
 
 class Cart with ChangeNotifier {
@@ -80,8 +81,7 @@ class Cart with ChangeNotifier {
             quantity: existingCartItem.quantity - 1,
             price: existingCartItem.price),
       );
-    }
-    else {
+    } else {
       _items.remove(productId);
     }
     notifyListeners();

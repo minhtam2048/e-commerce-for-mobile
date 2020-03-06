@@ -25,6 +25,34 @@ class OrdersProviders with ChangeNotifier {
     return [..._orders];
   }
 
+  Future<void> fetchOrders() async {
+    final url = 'https://amajon-flutter.firebaseio.com/orders.json';
+    try {
+      final res = await http.get(url);
+      final List<OrderItem> loadedOrders = [];
+      // print(json.decode(res.body));
+      final extractedData = json.decode(res.body) as Map<String, dynamic>;
+      extractedData.forEach((orderId, orderData) {
+        loadedOrders.add(OrderItem(
+          id: orderId,
+          amount: orderData['amount'],
+          dateTime: DateTime.parse(orderData['dateTime']),
+          products: (orderData['products'] as List<dynamic>)
+              .map((prod) => CartItem(
+                  id: prod['id'],
+                  price: prod['price'],
+                  quantity: prod['quantity'],
+                  title: prod['title']))
+              .toList(),
+        ));
+        _orders = loadedOrders;
+        notifyListeners();
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     final url = 'https://amajon-flutter.firebaseio.com/orders.json';
     final timestamp = DateTime.now();
