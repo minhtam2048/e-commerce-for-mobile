@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth_provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/orders_providers.dart';
 
@@ -20,14 +21,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
+          value: AuthProvider(),
+        ),
+        ChangeNotifierProvider.value(
           value: ProductsProvider(),
         ),
-        ChangeNotifierProvider.value(
-          value: Cart()
-        ),
-        ChangeNotifierProvider.value(
-          value: OrdersProviders()
-        ),
+        ChangeNotifierProvider.value(value: Cart()),
+        ChangeNotifierProvider.value(value: OrdersProviders()),
       ],
       child: MaterialApp(
           title: 'Amazon',
