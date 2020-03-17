@@ -23,19 +23,27 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(
           value: AuthProvider(),
         ),
-        ChangeNotifierProvider.value(
-          value: ProductsProvider(),
+        //This provder will rebuild when auth proider changes
+        ChangeNotifierProxyProvider<AuthProvider, ProductsProvider>(
+          update: (ctx, auth, previousProductsProvider) => ProductsProvider(
+              auth.token,
+              previousProductsProvider == null
+                  ? []
+                  : previousProductsProvider.items), 
+              create: (BuildContext context) {},
         ),
         ChangeNotifierProvider.value(value: Cart()),
         ChangeNotifierProvider.value(value: OrdersProviders()),
       ],
-      child: MaterialApp(
+      // Make sure Material App rebuild when auth change
+      child: Consumer<AuthProvider>(
+        builder: (ctx, auth, _) => MaterialApp(
           title: 'Amazon',
           theme: ThemeData(
               primarySwatch: Colors.purple,
               accentColor: Colors.deepOrange,
               fontFamily: 'Anton'),
-          home: AuthScreen(),
+          home: auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
           routes: {
             ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
             CartScreen.routeName: (ctx) => CartScreen(),
@@ -43,7 +51,9 @@ class MyApp extends StatelessWidget {
             UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
             EditProductScreen.routeName: (ctx) => EditProductScreen(),
             AuthScreen.routeName: (ctx) => AuthScreen(),
-          }),
+          },
+        ),
+      ),
     );
   }
 }

@@ -46,6 +46,10 @@ class ProductsProvider with ChangeNotifier {
   Product lastProduct;
   final databaseReference = Firestore.instance;
 
+  final String authToken;
+
+  ProductsProvider(this.authToken, this._items);
+
   List<Product> get items {
     return [..._items];
   }
@@ -59,7 +63,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    const url = 'https://amajon-flutter.firebaseio.com/products.json';
+    final url = 'https://amajon-flutter.firebaseio.com/products.json?auth=$authToken';
     try {
       final res = await http.get(url);
       // print(json.decode(res.body));

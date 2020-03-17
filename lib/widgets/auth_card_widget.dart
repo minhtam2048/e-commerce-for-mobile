@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/common/http-exception.dart';
 import 'package:shop_app/providers/auth_provider.dart';
 import 'package:shop_app/screens/auth_screen.dart';
-import 'package:shop_app/screens/products_overview_screen.dart';
 
 class AuthCardWidget extends StatefulWidget {
   const AuthCardWidget({
@@ -26,18 +25,20 @@ class _AuthCardState extends State<AuthCardWidget> {
 
   void _showErrorDialog(String message) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              title: Text('An error occured'),
-              content: Text(message),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('Okay'),
-                  onPressed: ()  => Navigator.of(context).pop(),
-                )
-              ]);
-        });
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('An error occured'),
+        content: Text(message),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
+    );
   }
 
   Future<void> _submit() async {
@@ -62,7 +63,7 @@ class _AuthCardState extends State<AuthCardWidget> {
     } on HttpException catch (error) {
       var errorMessage = 'Authentication failed :(';
       if (error.toString().contains('EMAIL_EXISTS')) {
-        errorMessage = 'This email is alreay in use';
+        errorMessage = 'This email is already in use';
       } else if (error.toString().contains('INVALID_EMAIL')) {
         errorMessage = 'This is not a valid email address';
       } else if (error.toString().contains('WEAK_PASSWORD')) {
@@ -74,7 +75,7 @@ class _AuthCardState extends State<AuthCardWidget> {
       }
       _showErrorDialog(errorMessage);
     } catch (error) {
-      const errorMessage = 'Could not authenticate this email :(';
+      var errorMessage = 'Could not authenticate this email :(';
       _showErrorDialog(errorMessage);
     }
     setState(() {
