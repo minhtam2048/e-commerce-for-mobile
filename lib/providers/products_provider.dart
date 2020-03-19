@@ -47,8 +47,9 @@ class ProductsProvider with ChangeNotifier {
   final databaseReference = Firestore.instance;
 
   final String authToken;
+  final String userId;
 
-  ProductsProvider(this.authToken, this._items);
+  ProductsProvider(this.authToken, this.userId, this._items);
 
   List<Product> get items {
     return [..._items];
@@ -63,7 +64,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    final url = 'https://amajon-flutter.firebaseio.com/products.json?auth=$authToken';
+    var url = 'https://amajon-flutter.firebaseio.com/products.json?auth=$authToken';
     try {
       final res = await http.get(url);
       // print(json.decode(res.body));
@@ -71,14 +72,19 @@ class ProductsProvider with ChangeNotifier {
       if(extractedData == null) {
         return;
       }
+      url = 'https://amajon-flutter.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favResponse = await http.get(url);
+      final favoriteData = json.decode(favResponse.body);
+      print(favoriteData);
       final List<Product> loadedProducts = [];
+
       extractedData.forEach((productId, productData) {
         loadedProducts.add(Product(
           id: productId,
           title: productData['title'],
           description: productData['description'],
           price: productData['price'],
-          isFavorite: productData['isFavorite'],
+          isFavorite: favoriteData == null ? false : favoriteData[productId] ?? false,
           imageUrl: productData['imageUrl'],
         ));
       });
@@ -117,7 +123,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> addProduct(Product prod) async {
     // _items.add(value);
-    const url = 'https://amajon-flutter.firebaseio.com/products.json';
+    final url = 'https://amajon-flutter.firebaseio.com/products.json?auth=$authToken';
     try {
       final res = await http.post(
         url,
@@ -126,7 +132,6 @@ class ProductsProvider with ChangeNotifier {
           'description': prod.description,
           'imageUrl': prod.imageUrl,
           'price': prod.price,
-          'isFavorite': prod.isFavorite,
         }),
       );
       final newProduct = Product(
@@ -172,7 +177,7 @@ class ProductsProvider with ChangeNotifier {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
       try {
-        final url = 'https://amajon-flutter.firebaseio.com/products/$id.json';
+        final url = 'https://amajon-flutter.firebaseio.com/products/$id.json?auth=$authToken';
         await http.patch(url,
             body: json.encode({
               'title': selectedProduct.title,
@@ -191,7 +196,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = 'https://amajon-flutter.firebaseio.com/products/$id.json';
+    final url = 'https://amajon-flutter.firebaseio.com/products/$id.json?auth=$authToken';
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);

@@ -27,13 +27,21 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<AuthProvider, ProductsProvider>(
           update: (ctx, auth, previousProductsProvider) => ProductsProvider(
               auth.token,
+              auth.userId,
               previousProductsProvider == null
                   ? []
-                  : previousProductsProvider.items), 
-              create: (BuildContext context) {},
+                  : previousProductsProvider.items),
+          create: (BuildContext context) {},
         ),
         ChangeNotifierProvider.value(value: Cart()),
-        ChangeNotifierProvider.value(value: OrdersProviders()),
+        ChangeNotifierProxyProvider<AuthProvider, OrdersProviders>(
+          update: (ctx, auth, previousOrdersProvider) => OrdersProviders(
+              auth.token,
+              previousOrdersProvider == null
+                  ? []
+                  : previousOrdersProvider.orders), 
+          create: (BuildContext context) {},
+        )
       ],
       // Make sure Material App rebuild when auth change
       child: Consumer<AuthProvider>(
