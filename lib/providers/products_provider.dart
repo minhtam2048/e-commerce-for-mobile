@@ -63,8 +63,9 @@ class ProductsProvider with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  Future<void> fetchProducts() async {
-    var url = 'https://amajon-flutter.firebaseio.com/products.json?auth=$authToken';
+  Future<void> fetchProducts([bool filterByUser = false]) async {
+    final filterString = filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+    var url = 'https://amajon-flutter.firebaseio.com/products.json?auth=$authToken&$filterString';
     try {
       final res = await http.get(url);
       // print(json.decode(res.body));
@@ -75,7 +76,7 @@ class ProductsProvider with ChangeNotifier {
       url = 'https://amajon-flutter.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
       final favResponse = await http.get(url);
       final favoriteData = json.decode(favResponse.body);
-      print(favoriteData);
+      // print(favoriteData);
       final List<Product> loadedProducts = [];
 
       extractedData.forEach((productId, productData) {
@@ -132,6 +133,7 @@ class ProductsProvider with ChangeNotifier {
           'description': prod.description,
           'imageUrl': prod.imageUrl,
           'price': prod.price,
+          'creatorId': userId
         }),
       );
       final newProduct = Product(
